@@ -104,9 +104,9 @@ typedef struct gdipm_t
 GpStatus gdipm_init(gdipm_t *gdipm)
 {
     FARPROC fnFar;
-	HINSTANCE hInst;
+    HINSTANCE hInst;
 
-	hInst = gdipm->m_hInst = LoadLibraryW(L"gdiplus.dll");
+    hInst = gdipm->m_hInst = LoadLibraryW(L"gdiplus.dll");
     if (!hInst)
         return GdiplusNotInitialized;
 
@@ -141,8 +141,8 @@ GpStatus gdipm_init(gdipm_t *gdipm)
 
 #undef GET_PROC
 
-	gdipm->m_num_encoder = 0;
-	gdipm->m_encoders = NULL;
+    gdipm->m_num_encoder = 0;
+    gdipm->m_encoders = NULL;
 
     return gdipm->m_GdiplusStartup(&gdipm->m_token, &gdipm->m_startup_input, &gdipm->m_startup_output);
 }
@@ -158,10 +158,17 @@ void gdipm_exit(gdipm_t *gdipm)
 
 GpStatus gdipm_init_ex(void **pgdipm)
 {
+    GpStatus status;
     *pgdipm = malloc(sizeof(gdipm_t));
     if (!*pgdipm)
         return OutOfMemory;
-    return gdipm_init(*pgdipm);
+    status = gdipm_init(*pgdipm);
+    if (status != Ok)
+    {
+        free(*pgdipm);
+        *pgdipm = NULL;
+    }
+    return status;
 }
 
 void gdipm_exit_ex(void *gdipm)
@@ -180,9 +187,9 @@ HBITMAP gdipm_load_pic(void *gdipm, const WCHAR *image_filename
     HBITMAP hbm = NULL;
     Color color = 0xFFFFFFFF;
     GpBitmap *pBitmap = NULL;
-	GpStatus status;
+    GpStatus status;
 
-	if (p->m_GdipCreateBitmapFromFile(image_filename, &pBitmap) != Ok)
+    if (p->m_GdipCreateBitmapFromFile(image_filename, &pBitmap) != Ok)
         return NULL;
 
     status = p->m_GdipCreateHBITMAPFromBitmap(pBitmap, &hbm, color);
@@ -212,7 +219,7 @@ HBITMAP gdipm_load_pic(void *gdipm, const WCHAR *image_filename
 static CLSID
 gdipm_find_codec(const WCHAR *dotext, const ImageCodecInfo *pCodecs, UINT nCodecs)
 {
-	UINT i;
+    UINT i;
     for (i = 0; i < nCodecs; ++i)
     {
         const WCHAR *pSpecs = pCodecs[i].FilenameExtension;
@@ -228,7 +235,7 @@ gdipm_find_codec(const WCHAR *dotext, const ImageCodecInfo *pCodecs, UINT nCodec
                 : ichSep - ichOld;
 
             WCHAR strSpec[MAX_PATH];
-			const WCHAR *pDot;
+            const WCHAR *pDot;
             lstrcpynW(strSpec, pSpecs + ichOld, min(specLen + 1, MAX_PATH));
 
             pDot = wcsrchr(strSpec, L'.');
@@ -264,9 +271,9 @@ BOOL gdipm_save_pic(void *gdipm, const WCHAR *image_filename, HBITMAP hBitmap
     gdipm_t *p = gdipm;
     GpStatus status;
     GpBitmap *pBitmap = NULL;
-	CLSID clsid;
+    CLSID clsid;
 
-	p->m_GdipCreateBitmapFromHBITMAP(hBitmap, NULL, &pBitmap);
+    p->m_GdipCreateBitmapFromHBITMAP(hBitmap, NULL, &pBitmap);
 
 #ifndef NO_DPI
     p->m_GdipBitmapSetResolution(pBitmap, x_dpi, y_dpi);

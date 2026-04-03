@@ -19,11 +19,11 @@ void usage(void)
 
 int wmain(int argc, wchar_t **wargv)
 {
-	wchar_t *input;
-	wchar_t *output;
-	void *gdipm;
-	GpStatus status;
-	HBITMAP hBitmap;
+    wchar_t *input;
+    wchar_t *output;
+    void *gdipm;
+    GpStatus status;
+    HBITMAP hBitmap;
 #ifndef NO_DPI
     float x_dpi, y_dpi;
 #endif
@@ -61,7 +61,7 @@ int wmain(int argc, wchar_t **wargv)
         if (gdipm_save_pic(gdipm, output, hBitmap, x_dpi, y_dpi))
         {
             status = Ok;
-			printf("x_dpi: %f, y_dpi: %f\n", x_dpi, y_dpi);
+            printf("x_dpi: %f, y_dpi: %f\n", x_dpi, y_dpi);
         }
     }
 #endif
