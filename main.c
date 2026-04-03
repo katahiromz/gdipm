@@ -53,6 +53,7 @@ int wmain(int argc, wchar_t **wargv)
         {
             status = Ok;
         }
+        DeleteObject(hBitmap);
     }
 #else
     hBitmap = gdipm_load_pic(gdipm, input, &x_dpi, &y_dpi);
@@ -63,6 +64,7 @@ int wmain(int argc, wchar_t **wargv)
             status = Ok;
             printf("x_dpi: %f, y_dpi: %f\n", x_dpi, y_dpi);
         }
+        DeleteObject(hBitmap);
     }
 #endif
 
