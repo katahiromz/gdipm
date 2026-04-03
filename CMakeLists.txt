@@ -16,7 +16,7 @@ endif()
 # libgdipm.a
 add_library(libgdipm STATIC gdipm.c)
 set_target_properties(libgdipm PROPERTIES PREFIX "")
-target_link_libraries(libgdipm gdi32 shlwapi uuid libgdipm)
+target_link_libraries(libgdipm gdi32 shlwapi uuid)
 
 # gdipm.exe
 add_executable(gdipm main.c)

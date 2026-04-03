@@ -4,6 +4,10 @@
 
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum GpStatus
 {
     Ok = 0,
@@ -58,4 +62,8 @@ void gdipm_exit_ex(void *gdipm);
 #else
     HBITMAP gdipm_load_pic(void *gdipm, const WCHAR *image_filename, float *x_dpi, float *y_dpi);
     BOOL gdipm_save_pic(void *gdipm, const WCHAR *image_filename, HBITMAP hBitmap, float x_dpi, float y_dpi);
+#endif
+
+#ifdef __cplusplus
+} // extern "C"
 #endif
