@@ -173,8 +173,11 @@ GpStatus gdipm_init_ex(void **pgdipm)
 
 void gdipm_exit_ex(void *gdipm)
 {
-    gdipm_exit(gdipm);
-    free(gdipm);
+    if (gdipm)
+    {
+        gdipm_exit(gdipm);
+        free(gdipm);
+    }
 }
 
 HBITMAP gdipm_load_pic(void *gdipm, const WCHAR *image_filename
