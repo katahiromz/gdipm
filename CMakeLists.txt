@@ -21,3 +21,6 @@ target_link_libraries(libgdipm gdi32 shlwapi uuid)
 # gdipm.exe
 add_executable(gdipm main.c)
 target_link_libraries(gdipm libgdipm)
+
+# display status
+message(STATUS "GDIPM_NO_DPI = ${GDIPM_NO_DPI}")
