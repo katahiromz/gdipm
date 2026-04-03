@@ -24,7 +24,7 @@ int wmain(int argc, wchar_t **wargv)
     void *gdipm;
     GpStatus status;
     HBITMAP hBitmap;
-#ifndef NO_DPI
+#ifndef GDIPM_NO_DPI
     float x_dpi, y_dpi;
 #endif
 
@@ -45,7 +45,7 @@ int wmain(int argc, wchar_t **wargv)
     }
 
     status = GenericError;
-#ifdef NO_DPI
+#ifdef GDIPM_NO_DPI
     hBitmap = gdipm_load_pic(gdipm, input);
     if (hBitmap)
     {

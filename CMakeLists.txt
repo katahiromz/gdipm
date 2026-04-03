@@ -8,9 +8,9 @@ cmake_minimum_required(VERSION 3.10)
 project(gdipm C)
 
 # Don't use DPI?
-option(NO_DPI "Don't use DPI (dots per inch)" OFF)
-if(NO_DPI)
-    add_definitions(-DNO_DPI)
+option(GDIPM_NO_DPI "Don't use DPI (dots per inch)" OFF)
+if(GDIPM_NO_DPI)
+    add_definitions(-DGDIPM_NO_DPI)
 endif()
 
 # libgdipm.a

@@ -52,7 +52,7 @@ MakeARGB(BYTE a, BYTE r, BYTE g, BYTE b)
 GpStatus gdipm_init_ex(void **pgdipm);
 void gdipm_exit_ex(void *gdipm);
 
-#ifdef NO_DPI
+#ifdef GDIPM_NO_DPI
     HBITMAP gdipm_load_pic(void *gdipm, const WCHAR *image_filename);
     BOOL gdipm_save_pic(void *gdipm, const WCHAR *image_filename, HBITMAP hBitmap);
 #else

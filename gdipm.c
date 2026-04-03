@@ -69,7 +69,7 @@ typedef GpStatus (WINAPI *FN_GdipDisposeImage)(GpImage *);
 typedef GpStatus (WINAPI *FN_GdipCreateBitmapFromHBITMAP)(HBITMAP, HPALETTE, GpBitmap **);
 typedef GpStatus (WINAPI *FN_GdipSaveImageToFile)(GpImage *, const WCHAR *, const CLSID *, const EncoderParameters *);
 typedef GpStatus (WINAPI *FN_GdipDisposeImage)(GpImage *);
-#ifndef NO_DPI
+#ifndef GDIPM_NO_DPI
 typedef GpStatus (WINAPI *FN_GdipGetImageHorizontalResolution)(GpImage *, REAL *);
 typedef GpStatus (WINAPI *FN_GdipGetImageVerticalResolution)(GpImage *, REAL *);
 typedef GpStatus (WINAPI *FN_GdipBitmapSetResolution)(GpBitmap *, REAL, REAL);
@@ -90,7 +90,7 @@ typedef struct gdipm_t
     FN_GdipDisposeImage m_GdipDisposeImage;
     FN_GdipCreateBitmapFromHBITMAP m_GdipCreateBitmapFromHBITMAP;
     FN_GdipSaveImageToFile m_GdipSaveImageToFile;
-#ifndef NO_DPI
+#ifndef GDIPM_NO_DPI
     FN_GdipGetImageHorizontalResolution m_GdipGetImageHorizontalResolution;
     FN_GdipGetImageVerticalResolution m_GdipGetImageVerticalResolution;
     FN_GdipBitmapSetResolution m_GdipBitmapSetResolution;
@@ -131,7 +131,7 @@ GpStatus gdipm_init(gdipm_t *gdipm)
     GET_PROC(GdipDisposeImage);
     GET_PROC(GdipCreateBitmapFromHBITMAP);
     GET_PROC(GdipSaveImageToFile);
-#ifndef NO_DPI
+#ifndef GDIPM_NO_DPI
     GET_PROC(GdipGetImageHorizontalResolution);
     GET_PROC(GdipGetImageVerticalResolution);
     GET_PROC(GdipBitmapSetResolution);
@@ -181,7 +181,7 @@ void gdipm_exit_ex(void *gdipm)
 }
 
 HBITMAP gdipm_load_pic(void *gdipm, const WCHAR *image_filename
-#ifndef NO_DPI
+#ifndef GDIPM_NO_DPI
     , float *x_dpi, float *y_dpi
 #endif
 )
@@ -197,7 +197,7 @@ HBITMAP gdipm_load_pic(void *gdipm, const WCHAR *image_filename
 
     status = p->m_GdipCreateHBITMAPFromBitmap(pBitmap, &hbm, color);
 
-#ifndef NO_DPI
+#ifndef GDIPM_NO_DPI
     if (x_dpi)
         p->m_GdipGetImageHorizontalResolution(pBitmap, x_dpi);
     if (y_dpi)
@@ -266,7 +266,7 @@ gdipm_find_codec(const WCHAR *dotext, const ImageCodecInfo *pCodecs, UINT nCodec
 }
 
 BOOL gdipm_save_pic(void *gdipm, const WCHAR *image_filename, HBITMAP hBitmap
-#ifndef NO_DPI
+#ifndef GDIPM_NO_DPI
     , float x_dpi, float y_dpi
 #endif
 )
@@ -280,7 +280,7 @@ BOOL gdipm_save_pic(void *gdipm, const WCHAR *image_filename, HBITMAP hBitmap
     if (status != Ok)
         return FALSE;
 
-#ifndef NO_DPI
+#ifndef GDIPM_NO_DPI
     p->m_GdipBitmapSetResolution(pBitmap, x_dpi, y_dpi);
 #endif
 
