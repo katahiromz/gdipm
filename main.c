@@ -9,7 +9,7 @@
 
 void version(void)
 {
-    puts("gdipm version 1.6");
+    printf("gdipm version %s\n", GDIPM_VERSION);
 }
 
 void usage(void)
@@ -35,6 +35,12 @@ int wmain(int argc, wchar_t **wargv)
     float x_dpi, y_dpi;
 #endif
     const ARGB back_color = MakeARGB(0xFF, 0xFF, 0xFF, 0xFF);
+
+    if (argc == 2 && lstrcmpiW(wargv[1], L"--version") == 0)
+    {
+        version();
+        return 0;
+    }
 
     if (argc != 3)
     {

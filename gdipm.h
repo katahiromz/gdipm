@@ -4,8 +4,6 @@
 
 #pragma once
 
-#define GDIPM_VERSION MAKELONG(1, 6)
-
 #ifdef __cplusplus
 extern "C" {
 #endif
