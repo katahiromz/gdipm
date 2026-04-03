@@ -1,0 +1,10 @@
+gdipm ant.png ant.png.bmp
+gdipm ant.png ant.png.png
+gdipm ant.png ant.png.jpg
+gdipm ant.png ant.png.tif
+gdipm ant.png ant.png.gif
+gdipm ant.bmp ant.bmp.bmp
+gdipm ant.bmp ant.bmp.png
+gdipm ant.bmp ant.bmp.jpg
+gdipm ant.bmp ant.bmp.tif
+gdipm ant.bmp ant.bmp.gif
