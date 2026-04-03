@@ -6,6 +6,32 @@
 #include <shlwapi.h>
 #include "gdipm.h"
 
+typedef enum GpStatus
+{
+    Ok = 0,
+    GenericError = 1,
+    InvalidParameter = 2,
+    OutOfMemory = 3,
+    ObjectBusy = 4,
+    InsufficientBuffer = 5,
+    NotImplemented = 6,
+    Win32Error = 7,
+    WrongState = 8,
+    Aborted = 9,
+    FileNotFound = 10,
+    ValueOverflow = 11,
+    AccessDenied = 12,
+    UnknownImageFormat = 13,
+    FontFamilyNotFound = 14,
+    FontStyleNotFound = 15,
+    NotTrueTypeFont = 16,
+    UnsupportedGdiplusVersion = 17,
+    GdiplusNotInitialized = 18,
+    PropertyNotFound = 19,
+    PropertyNotSupported = 20,
+    ProfileNotFound = 21
+} GpStatus;
+
 typedef enum DebugEventLevel
 {
     DebugEventLevelFatal,
@@ -156,19 +182,19 @@ void gdipm_exit(gdipm_t *gdipm)
     FreeLibrary(gdipm->m_hInst);
 }
 
-GpStatus gdipm_init_ex(void **pgdipm)
+HRESULT gdipm_init_ex(void **pgdipm)
 {
     GpStatus status;
     *pgdipm = malloc(sizeof(gdipm_t));
     if (!*pgdipm)
-        return OutOfMemory;
+        return E_OUTOFMEMORY;
     status = gdipm_init(*pgdipm);
     if (status != Ok)
     {
         free(*pgdipm);
         *pgdipm = NULL;
     }
-    return status;
+    return (status == Ok) ? S_OK : E_FAIL;
 }
 
 void gdipm_exit_ex(void *gdipm)
@@ -188,7 +214,7 @@ HBITMAP gdipm_load_pic(void *gdipm, const WCHAR *image_filename
 {
     gdipm_t *p = gdipm;
     HBITMAP hbm = NULL;
-    Color color = 0xFFFFFFFF;
+    Color color = MakeARGB(0xFF, 0xFF, 0xFF, 0xFF);
     GpBitmap *pBitmap = NULL;
     GpStatus status;
 

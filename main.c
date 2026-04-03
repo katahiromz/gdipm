@@ -9,7 +9,7 @@
 
 void version(void)
 {
-    puts("gdipm version 1.3");
+    puts("gdipm version 1.4");
 }
 
 void usage(void)
@@ -22,7 +22,7 @@ int wmain(int argc, wchar_t **wargv)
     wchar_t *input;
     wchar_t *output;
     void *gdipm;
-    GpStatus status;
+    BOOL result = FALSE;
     HBITMAP hBitmap;
 #ifndef GDIPM_NO_DPI
     float x_dpi, y_dpi;
@@ -37,21 +37,19 @@ int wmain(int argc, wchar_t **wargv)
     input = wargv[1];
     output = wargv[2];
 
-    status = gdipm_init_ex(&gdipm);
-    if (status != Ok)
+    if (gdipm_init_ex(&gdipm) != S_OK)
     {
-        printf("FAILED: %d\n", status);
+        printf("FAILED: gdipm_init_ex\n");
         return 1;
     }
 
-    status = GenericError;
 #ifdef GDIPM_NO_DPI
     hBitmap = gdipm_load_pic(gdipm, input);
     if (hBitmap)
     {
         if (gdipm_save_pic(gdipm, output, hBitmap))
         {
-            status = Ok;
+            result = TRUE;
         }
         DeleteObject(hBitmap);
     }
@@ -61,7 +59,7 @@ int wmain(int argc, wchar_t **wargv)
     {
         if (gdipm_save_pic(gdipm, output, hBitmap, x_dpi, y_dpi))
         {
-            status = Ok;
+            result = TRUE;
             printf("x_dpi: %f, y_dpi: %f\n", x_dpi, y_dpi);
         }
         DeleteObject(hBitmap);
@@ -70,9 +68,9 @@ int wmain(int argc, wchar_t **wargv)
 
     gdipm_exit_ex(gdipm);
 
-    if (status != Ok)
+    if (!result)
     {
-        printf("FAILED: %d\n", status);
+        puts("FAILED");
         return 1;
     }
 

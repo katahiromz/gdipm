@@ -3,7 +3,7 @@
 ```c
 #include "gdipm.h"
 
-GpStatus gdipm_init_ex(void **pgdipm);
+HRESULT gdipm_init_ex(void **pgdipm);
 void gdipm_exit_ex(void *gdipm);
 
 #ifdef GDIPM_NO_DPI
