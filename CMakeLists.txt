@@ -13,6 +13,11 @@ if(NO_DPI)
     add_definitions(-DNO_DPI)
 endif()
 
+# libgdipm.a
+add_library(libgdipm STATIC gdipm.c)
+set_target_properties(libgdipm PROPERTIES PREFIX "")
+target_link_libraries(libgdipm gdi32 shlwapi uuid libgdipm)
+
 # gdipm.exe
-add_executable(gdipm gdipm.c main.c)
-target_link_libraries(gdipm gdi32 shlwapi uuid)
+add_executable(gdipm main.c)
+target_link_libraries(gdipm libgdipm)
