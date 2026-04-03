@@ -32,6 +32,17 @@ typedef enum GpStatus
     ProfileNotFound = 21
 } GpStatus;
 
+typedef LPVOID GpBitmap, GpImage;
+typedef DWORD ARGB, Color;
+typedef float REAL;
+
+static __inline ARGB
+MakeARGB(BYTE a, BYTE r, BYTE g, BYTE b)
+{
+    ARGB a0 = a, r0 = r, g0 = g, b0 = b;
+    return (a0 << 24) | (r0 << 16) | (g0 << 8) | b0;
+}
+
 typedef enum DebugEventLevel
 {
     DebugEventLevelFatal,
