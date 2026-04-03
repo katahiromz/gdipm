@@ -33,15 +33,8 @@ typedef enum GpStatus
 } GpStatus;
 
 typedef LPVOID GpBitmap, GpImage;
-typedef DWORD ARGB, Color;
+typedef DWORD Color;
 typedef float REAL;
-
-static __inline ARGB
-MakeARGB(BYTE a, BYTE r, BYTE g, BYTE b)
-{
-    ARGB a0 = a, r0 = r, g0 = g, b0 = b;
-    return (a0 << 24) | (r0 << 16) | (g0 << 8) | b0;
-}
 
 typedef enum DebugEventLevel
 {
@@ -113,6 +106,7 @@ typedef GpStatus (WINAPI *FN_GdipBitmapSetResolution)(GpBitmap *, REAL, REAL);
 #endif
 typedef GpStatus (WINAPI *FN_GdipGetImageEncodersSize)(UINT *, UINT *);
 typedef GpStatus (WINAPI *FN_GdipGetImageEncoders)(UINT, UINT, ImageCodecInfo *);
+
 
 typedef struct gdipm_t
 {
@@ -217,7 +211,7 @@ void gdipm_exit_ex(void *gdipm)
     }
 }
 
-HBITMAP gdipm_load_pic(void *gdipm, const WCHAR *image_filename
+HBITMAP gdipm_load_pic(void *gdipm, const WCHAR *image_filename, ARGB back_color
 #ifndef GDIPM_NO_DPI
     , float *x_dpi, float *y_dpi
 #endif
@@ -225,14 +219,13 @@ HBITMAP gdipm_load_pic(void *gdipm, const WCHAR *image_filename
 {
     gdipm_t *p = gdipm;
     HBITMAP hbm = NULL;
-    Color color = MakeARGB(0xFF, 0xFF, 0xFF, 0xFF);
     GpBitmap *pBitmap = NULL;
     GpStatus status;
 
     if (p->m_GdipCreateBitmapFromFile(image_filename, &pBitmap) != Ok)
         return NULL;
 
-    status = p->m_GdipCreateHBITMAPFromBitmap(pBitmap, &hbm, color);
+    status = p->m_GdipCreateHBITMAPFromBitmap(pBitmap, &hbm, back_color);
 
 #ifndef GDIPM_NO_DPI
     if (x_dpi)
@@ -251,9 +244,10 @@ HBITMAP gdipm_load_pic(void *gdipm, const WCHAR *image_filename
     }
 #endif
 
-    p->m_GdipDisposeImage(pBitmap);
+    if (pBitmap)
+        p->m_GdipDisposeImage(pBitmap);
 
-    return (status == Ok ? hbm : NULL);
+    return (status == Ok) ? hbm : NULL;
 }
 
 static CLSID
