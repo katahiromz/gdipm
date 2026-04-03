@@ -107,7 +107,6 @@ typedef GpStatus (WINAPI *FN_GdipBitmapSetResolution)(GpBitmap *, REAL, REAL);
 typedef GpStatus (WINAPI *FN_GdipGetImageEncodersSize)(UINT *, UINT *);
 typedef GpStatus (WINAPI *FN_GdipGetImageEncoders)(UINT, UINT, ImageCodecInfo *);
 
-
 typedef struct gdipm_t
 {
     HINSTANCE m_hInst;
@@ -132,7 +131,7 @@ typedef struct gdipm_t
     ImageCodecInfo *m_encoders;
 } gdipm_t;
 
-GpStatus gdipm_init(gdipm_t *gdipm)
+static GpStatus gdipm_init(gdipm_t *gdipm)
 {
     FARPROC fnFar;
     HINSTANCE hInst;
@@ -178,7 +177,7 @@ GpStatus gdipm_init(gdipm_t *gdipm)
     return gdipm->m_GdiplusStartup(&gdipm->m_token, &gdipm->m_startup_input, &gdipm->m_startup_output);
 }
 
-void gdipm_exit(gdipm_t *gdipm)
+static void gdipm_exit(gdipm_t *gdipm)
 {
     free(gdipm->m_encoders);
     gdipm->m_encoders = NULL;
@@ -250,8 +249,8 @@ HBITMAP gdipm_load_pic(void *gdipm, const WCHAR *image_filename, ARGB back_color
     return (status == Ok) ? hbm : NULL;
 }
 
-static CLSID
-gdipm_find_codec(const WCHAR *dotext, const ImageCodecInfo *pCodecs, UINT nCodecs)
+static HRESULT
+gdipm_find_codec(CLSID *pclsid, const WCHAR *dotext, const ImageCodecInfo *pCodecs, UINT nCodecs)
 {
     UINT i;
     for (i = 0; i < nCodecs; ++i)
@@ -279,12 +278,18 @@ gdipm_find_codec(const WCHAR *dotext, const ImageCodecInfo *pCodecs, UINT nCodec
                 lstrcpynW(strSpecDotted, pDot, _countof(strSpecDotted));
 
                 if (!dotext || _wcsicmp(strSpecDotted, dotext) == 0)
-                    return pCodecs[i].Clsid;
+                {
+                    *pclsid = pCodecs[i].Clsid;
+                    return S_OK;
+                }
             }
             else
             {
                 if (!dotext || _wcsicmp(strSpec, dotext) == 0)
-                    return pCodecs[i].Clsid;
+                {
+                    *pclsid = pCodecs[i].Clsid;
+                    return S_OK;
+                }
             }
 
             if (ichSep < 0)
@@ -293,7 +298,7 @@ gdipm_find_codec(const WCHAR *dotext, const ImageCodecInfo *pCodecs, UINT nCodec
         }
     }
 
-    return CLSID_NULL;
+    return E_FAIL;
 }
 
 BOOL gdipm_save_pic(void *gdipm, const WCHAR *image_filename, HBITMAP hBitmap
@@ -334,9 +339,9 @@ BOOL gdipm_save_pic(void *gdipm, const WCHAR *image_filename, HBITMAP hBitmap
             return status;
     }
 
-    clsid = gdipm_find_codec(PathFindExtensionW(image_filename), p->m_encoders, p->m_num_encoder);
-
-    status = p->m_GdipSaveImageToFile(pBitmap, image_filename, &clsid, NULL);
+    status = NotImplemented;
+    if (gdipm_find_codec(&clsid, PathFindExtensionW(image_filename), p->m_encoders, p->m_num_encoder) == S_OK)
+        status = p->m_GdipSaveImageToFile(pBitmap, image_filename, &clsid, NULL);
 
     p->m_GdipDisposeImage(pBitmap);
 
