@@ -9,7 +9,7 @@
 
 void version(void)
 {
-    puts("gdipm version 1.0");
+    puts("gdipm version 1.1");
 }
 
 void usage(void)

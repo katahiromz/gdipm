@@ -276,7 +276,9 @@ BOOL gdipm_save_pic(void *gdipm, const WCHAR *image_filename, HBITMAP hBitmap
     GpBitmap *pBitmap = NULL;
     CLSID clsid;
 
-    p->m_GdipCreateBitmapFromHBITMAP(hBitmap, NULL, &pBitmap);
+    status = p->m_GdipCreateBitmapFromHBITMAP(hBitmap, NULL, &pBitmap);
+    if (status != Ok)
+        return FALSE;
 
 #ifndef NO_DPI
     p->m_GdipBitmapSetResolution(pBitmap, x_dpi, y_dpi);
